@@ -15,6 +15,10 @@ fun genericsExample(){
     val cleaner = TapWaterCleaner()
     val aquarium = Aquarium(TapWater())
     aquarium.addWater(cleaner)
+    isWaterClean(aquarium)
+    println(aquarium.hasWaterSupplyOfType<TapWater>())
+    println(aquarium.waterSupply.isOfType<TapWater>())
+    println(aquarium.hasWaterSupplyOfType<TapWater>())
 }
 fun main(){
     genericsExample()
@@ -53,7 +57,18 @@ class Aquarium<out T: WaterSupply>(val waterSupply: T)
         }
         println("Water added")
     }
+
+
 }
+
+inline fun <reified R: WaterSupply>Aquarium<*>.hasWaterSupplyOfType() = waterSupply is R
+
+inline fun<reified T:WaterSupply> WaterSupply.isOfType() = this is T
 fun addItemTo(aquarium: Aquarium<WaterSupply>) = println("item added")
 
-fun isWaterClean(aquarium: Aquarium<WaterSupply>)
+//We generally make a generic function when we want that function to take in an object of a class which requirres a generic
+
+fun <T :WaterSupply> isWaterClean(aquarium: Aquarium<T>)
+{
+    println("aquarium water is clean: ${!aquarium.waterSupply.needsProcessing}")
+}
